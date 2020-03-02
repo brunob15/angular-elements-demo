@@ -1,31 +1,31 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
+import { NgModule } from '@angular/core';
 
-import { TalkComponent } from './components/talk/talk.component';
-import { SponsorComponent } from './components/sponsor/sponsor.component';
+import { NgxElementModule, NgxElementComponent } from 'ngx-element';
+
+const lazyConfig = [
+  {
+    selector: 'talk',
+    loadChildren: () => import('./components/talk/talk.module')
+  },
+  {
+    selector: 'sponsor',
+    loadChildren: () => import('./components/sponsor/sponsor.module')
+  }
+];
 
 @NgModule({
-  declarations: [
-    TalkComponent,
-    SponsorComponent
-  ],
+  declarations: [],
   imports: [
-    BrowserModule
+    BrowserModule,
+    NgxElementModule.forRoot(lazyConfig)
   ],
   entryComponents: [
-    TalkComponent,
-    SponsorComponent
+    NgxElementComponent
   ]
 })
 export class AppModule {
-  constructor(private injector: Injector) {}
+  constructor() {}
 
-  ngDoBootstrap() {
-    const talkElement = createCustomElement(TalkComponent, { injector: this.injector });
-    customElements.define('talk-element', talkElement);
-
-    const sponsorElement = createCustomElement(SponsorComponent, { injector: this.injector });
-    customElements.define('sponsor-element', sponsorElement);
-  }
+  ngDoBootstrap() {}
 }
